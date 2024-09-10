@@ -1,9 +1,18 @@
 .wrap {
-  margin: 0 auto;
+  margin: auto auto;
   width: 640px;
 }
 .number {
   text-align: center;
+}
+
+.title {
+  font-family: Iceland, sans-serif;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 24px;
+  text-align: center;
+  margin: 0;
 }
 
 .status {

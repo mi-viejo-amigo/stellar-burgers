@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { setCookie, getCookie } from './cookie';
 import { TIngredient, TOrder, TOrdersData, TUser } from './types';
 
@@ -73,7 +74,9 @@ type TOrdersResponse = TServerResponse<{
 
 export const getIngredientsApi = () =>
   fetch(`${URL}/ingredients`)
-    .then((res) => checkResponse<TIngredientsResponse>(res))
+    .then((res) => {
+      return checkResponse<TIngredientsResponse>(res)
+    })
     .then((data) => {
       if (data?.success) return data.data;
       return Promise.reject(data);
