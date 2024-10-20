@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { TUser, TOrder } from '../utils/types';
+import { TUser, TOrder } from '../../utils/types';
 import {
   getUserApi,
   registerUserApi,
@@ -9,23 +9,23 @@ import {
   logoutApi,
   updateUserApi,
   getOrdersApi
-} from '../utils/burger-api';
-import { setCookie, getCookie, deleteCookie } from '../utils/cookie';
+} from '@api';
+import { setCookie, getCookie, deleteCookie } from '../../utils/cookie';
 
 type TUserState = {
   isAuthChecked: boolean;
   error: string;
-  request: boolean;
-  success: boolean;
+  orderRequest: boolean;
+  registerRequest: boolean;
   user: TUser | null;
   userOrders: TOrder[];
 };
 
-const initialState: TUserState = {
+export const initialState: TUserState = {
   isAuthChecked: false,
   error: '',
-  request: false,
-  success: false,
+  orderRequest: false,
+  registerRequest: false,
   user: null,
   userOrders: []
 };
@@ -44,6 +44,7 @@ export const getUser = createAsyncThunk(
         });
     } else {
       dispatch(setIsAuthChecked(true));
+      dispatch(clearUser());
     }
   }
 );
@@ -61,9 +62,11 @@ export const loginUser = createAsyncThunk(
       setCookie('accessToken', response.accessToken);
       localStorage.setItem('refreshToken', response.refreshToken);
       return response;
-    } catch (error: any) {
-      // Возвращаем результат rejectWithValue, чтобы обработать ошибку корректно
-      return rejectWithValue(error?.message || 'Не удалось авторизоваться');
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue('Неизвестная ошибка');
     }
   }
 );
@@ -77,7 +80,9 @@ export const logoutUser = createAsyncThunk(
         localStorage.removeItem('refreshToken');
         dispatch(setUser(null));
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+      });
   }
 );
 
@@ -111,52 +116,48 @@ export const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(registerUser.pending, (state) => {
-        state.success = false;
-        // state.isAuthChecked = false;
+        state.registerRequest = false;
       })
       .addCase(registerUser.rejected, (state, action) => {
-        state.success = false;
-        state.isAuthChecked = true;
+        state.registerRequest = false;
+        // state.isAuthChecked = true;
         state.error = action.error.message as string;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
-        state.success = action.payload.success;
-        state.isAuthChecked = true;
+        state.registerRequest = action.payload.success;
+        // state.isAuthChecked = true;
         state.error = action.payload.success
           ? ''
           : 'Не удалось зарегестрироваться.';
       })
       .addCase(loginUser.pending, (state) => {
-        state.success = false;
-        // не снимаю статус чекнутого юзера,
-        // что бы не показывать прелодер при каждом запросе и не перерендеревать компоненты.
-        // state.isAuthChecked = false;
+        // state.registerRequest = false;
+        state.isAuthChecked = false;
         state.error = '';
       })
-      .addCase(loginUser.rejected, (state, action) => {
-        state.success = false;
+      .addCase(loginUser.rejected, (state) => {
+        // state.registerRequest = false;
         state.isAuthChecked = true;
-        state.error = action.payload as string;
+        state.error = 'Не удалось авторизоваться.';
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.user = action.payload.user;
-        state.success = action.payload.success;
+        // state.registerRequest = action.payload.success;
         state.isAuthChecked = true;
         state.error = action.payload.success
           ? ''
           : 'Не удалось авторизоваться.';
       })
-      .addCase(getUser.pending, (state) => {
-        state.success = false;
-        state.isAuthChecked = false;
-      })
-      .addCase(getUser.rejected, (state) => {
-        state.user = null;
-        state.success = false;
-      })
-      .addCase(getUser.fulfilled, (state) => {
-        state.error = '';
-      })
+      // .addCase(getUser.pending, (state) => {
+      //   state.success = false;
+      //   state.isAuthChecked = false;
+      // })
+      // .addCase(getUser.rejected, (state) => {
+      //   state.success = false;
+      // })
+      // .addCase(getUser.fulfilled, (state) => {
+      //   state.error = '';
+      // })
       .addCase(updateUser.rejected, (state) => {
         state.error = 'Не удалось обновить данные.';
       })
@@ -166,17 +167,12 @@ export const userSlice = createSlice({
           ? ''
           : 'Не удалось обновить данные.';
       })
-      .addCase(getUserOrders.rejected, (state, action) => {
-        state.error = action.error.message as string;
-        state.userOrders = [];
-        state.request = false;
-      })
       .addCase(getUserOrders.pending, (state) => {
-        state.request = true;
+        state.orderRequest = true;
       })
       .addCase(getUserOrders.fulfilled, (state, action) => {
         state.userOrders = action.payload;
-        state.request = false;
+        state.orderRequest = false;
         state.error = '';
       });
   }

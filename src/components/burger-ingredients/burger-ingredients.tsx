@@ -7,8 +7,7 @@ import { TTabMode } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
 
 export const BurgerIngredients: FC = () => {
-
-  const {ingredients, error, loading} = useSelector((store)=> store.ingredientData)
+  const { ingredients } = useSelector((store) => store.ingredientData);
   /** TODO: взять переменные из стора */
 
   const buns = ingredients.filter((item) => item.type === 'bun');

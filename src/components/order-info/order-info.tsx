@@ -4,7 +4,7 @@ import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
 import { useSelector, useDispatch } from '../../services/store';
-import { getOrderByNumber } from '../../services/feedsSlice';
+import { getOrderByNumber } from '../../services/slices/feedsSlice';
 
 interface TOrderInfoProps {
   title?: boolean;
@@ -18,7 +18,7 @@ export const OrderInfo: FC<TOrderInfoProps> = (props) => {
   }, [number]);
 
   const ingredients = useSelector((state) => state.ingredientData.ingredients);
-  const orderData = useSelector((state) => state.feedsData.testOrderByNumber);
+  const orderData = useSelector((state) => state.feedsData.orderByNumber);
   /** TODO: взять переменные orderData и ingredients из стора */
 
   /* Готовим данные для отображения */

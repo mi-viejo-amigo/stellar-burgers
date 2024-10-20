@@ -8,16 +8,14 @@ import {
   orderBurger,
   clearConstructor,
   resetModalData
-} from '../../services/constructorSlice';
+} from '../../services/slices/constructorSlice';
 import { RootState } from '../../services/store';
 
 export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
   const user = useSelector((state: RootState) => state.userData.user);
 
-  //  тут будем получать данные из слайса Конструктора
   const { constructorItems, orderModalData, orderRequest } = useSelector(
     (state) => state.constructorBurger
   );
@@ -36,15 +34,10 @@ export const BurgerConstructor: FC = () => {
     } else {
       navigate('/login', { state: { from: '/' } });
     }
-
-    // navigate(`/feed/${orderModalData?.number}`); //СОМНИТЕЛЬНО!!!!
   };
-
-  //СОМНИТЕЛЬНО!!!!
   const closeOrderModal = () => {
-    // navigate('/');
     dispatch(resetModalData());
-  }; //СОМНИТЕЛЬНО!!!!
+  };
 
   const price = useMemo(
     () =>
@@ -55,8 +48,6 @@ export const BurgerConstructor: FC = () => {
       ),
     [constructorItems]
   );
-
-  // return null;
 
   return (
     <BurgerConstructorUI

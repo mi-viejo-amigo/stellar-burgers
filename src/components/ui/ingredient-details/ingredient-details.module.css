@@ -8,7 +8,9 @@
 }
 
 .title {
-  font-family: JetBrains Mono, sans-serif;
+  font-family:
+    JetBrains Mono,
+    sans-serif;
   font-size: 36px;
   font-weight: 700;
   line-height: 40px;

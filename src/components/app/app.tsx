@@ -14,8 +14,8 @@ import styles from './app.module.css';
 import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from '../../services/store';
-import { getAllIngredients } from '../../services/ingredientSlice';
-import { getUser } from '../../services/userSlice';
+import { getAllIngredients } from '../../services/slices/ingredientSlice';
+import { getUser } from '../../services/slices/userSlice';
 import {
   AppHeader,
   IngredientDetails,

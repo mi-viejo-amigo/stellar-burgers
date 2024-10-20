@@ -3,22 +3,21 @@ import {
   combineSlices,
   combineReducers
 } from '@reduxjs/toolkit';
-import { ingredientSlice } from './ingredientSlice';
-import { constructorSlice } from './constructorSlice';
-import { userSlice } from './userSlice';
-import { feedsSlice } from './feedsSlice';
+import { ingredientSlice } from './slices/ingredientSlice';
+import { constructorSlice } from './slices/constructorSlice';
+import { userSlice } from './slices/userSlice';
+import { feedsSlice } from './slices/feedsSlice';
 
 import {
   useDispatch as dispatchHook,
   useSelector as selectorHook
 } from 'react-redux';
 
-const rootReducer = combineReducers({
+export const rootReducer = combineReducers({
   ingredientData: ingredientSlice.reducer,
   constructorBurger: constructorSlice.reducer,
   userData: userSlice.reducer,
   feedsData: feedsSlice.reducer
-  // newBurger: orderSlice.reducer
 });
 
 export const store = configureStore({

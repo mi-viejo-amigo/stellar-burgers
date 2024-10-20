@@ -4,7 +4,7 @@ import { TOrder } from '@utils-types';
 import { FC } from 'react';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from '../../services/store';
-import { getFeeds } from '../../services/feedsSlice';
+import { getFeeds } from '../../services/slices/feedsSlice';
 
 export const Feed: FC = () => {
   /** TODO: взять переменную из стора */
